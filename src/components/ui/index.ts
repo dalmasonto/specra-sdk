@@ -1,0 +1,6 @@
+// UI primitive components
+export * from "./badge"
+export * from "./button"
+export * from "./dialog"
+export * from "./input"
+export * from "./textarea"
