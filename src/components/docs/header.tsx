@@ -8,16 +8,20 @@ import { ThemeToggle } from "./theme-toggle"
 import { SearchModal } from "./search-modal"
 import { useState, useEffect } from "react"
 import type { SpecraConfig } from "@/lib/config"
+import { useConfig } from "@/lib/config.context"
 import { getAssetPath } from "@/lib/utils"
 
 interface HeaderProps {
   currentVersion: string
   versions: string[]
   onMenuClick?: () => void
-  config: SpecraConfig
+  config?: SpecraConfig // Made optional since we can get it from context
 }
 
-export function Header({ currentVersion, versions, onMenuClick, config }: HeaderProps) {
+export function Header({ currentVersion, versions, onMenuClick, config: configProp }: HeaderProps) {
+  // Use config from context if not provided as prop
+  const contextConfig = useConfig()
+  const config = configProp || contextConfig
   const [searchOpen, setSearchOpen] = useState(false)
 
   // Keyboard shortcut for search (Cmd+K or Ctrl+K)
@@ -54,7 +58,7 @@ export function Header({ currentVersion, versions, onMenuClick, config }: Header
                 </span>
               </div>
             )}
-            <span className="font-semibold text-lg text-foreground">Specra</span>
+            <span className="font-semibold text-lg text-foreground">{config.site.title ?? "Specra"}</span>
           </Link>
         </div>
 

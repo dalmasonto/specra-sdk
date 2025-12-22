@@ -137,21 +137,25 @@ export function validateConfig(config: SpecraConfig): { valid: boolean; errors: 
 // Singleton instance
 let configInstance: SpecraConfig | null = null
 
+/**
+ * Initialize the Specra configuration
+ * Can be called multiple times - subsequent calls will update the config
+ * @param userConfig - Partial configuration to merge with defaults
+ * @returns The initialized configuration
+ */
 export function initConfig(userConfig: Partial<SpecraConfig>): SpecraConfig {
-  if (configInstance) {
-    throw new Error("Specra config has already been initialized")
-  }
-
   configInstance = loadConfig(userConfig)
   return configInstance
 }
 
 /**
  * Get the configuration instance (cached) (SERVER ONLY)
+ * If not initialized, returns default config
  */
 export function getConfig(): SpecraConfig {
   if (!configInstance) {
-    throw new Error("Specra config has not been initialized")
+    // Auto-initialize with defaults if not already initialized
+    configInstance = loadConfig({})
   }
   return configInstance
 }

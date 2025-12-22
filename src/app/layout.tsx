@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { getConfig } from "../lib/config"
 import { getAssetPath } from "../lib/utils"
+import { ConfigProvider } from "../lib/config.context"
 import { TabProvider } from "../components/docs/tab-context"
 import "../styles/globals.css"
 
@@ -65,9 +66,11 @@ export default function RootLayout({
   return (
     <html lang={config.site.language || "en"} suppressHydrationWarning>
       <body className={`${geist.className} font-sans antialiased`}>
-        <TabProvider defaultTab={defaultTab}>
-          {children}
-        </TabProvider>
+        <ConfigProvider config={config}>
+          <TabProvider defaultTab={defaultTab}>
+            {children}
+          </TabProvider>
+        </ConfigProvider>
       </body>
     </html>
   )

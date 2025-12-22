@@ -1,6 +1,6 @@
 {
   "name": "specra",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A modern documentation library for Next.js with built-in versioning, API reference generation, full-text search, and MDX support",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -56,7 +56,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/specra"
+    "url": "https://github.com/dalmasonto/specra"
   },
   "peerDependencies": {
     "next": "^14.0.0 || ^15.0.0 || ^16.0.0",

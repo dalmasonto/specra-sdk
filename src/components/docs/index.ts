@@ -44,5 +44,8 @@ export * from "./tooltip"
 export * from "./version-switcher"
 export * from "./video"
 
+// Re-export ConfigProvider from lib (client component for config context)
+export { ConfigProvider, useConfig, useConfigValue } from "../../lib/config.context"
+
 // API documentation components
 export * from "./api"

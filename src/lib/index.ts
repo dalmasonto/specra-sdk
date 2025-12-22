@@ -6,6 +6,7 @@ export * from './toc'
 // Configuration
 export * from './config.server'
 export * from './config'
+// NOTE: config.context is NOT exported here (it's client-only, exported from components/index)
 export type * from './config.types'
 
 // API Parsers
