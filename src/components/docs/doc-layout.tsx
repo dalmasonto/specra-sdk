@@ -1,13 +1,18 @@
 import { ExternalLink, FileEdit } from "lucide-react"
+import { MDXRemote, type MDXRemoteProps } from "next-mdx-remote/rsc"
+import remarkGfm from "remark-gfm"
+import rehypeSlug from "rehype-slug"
+import { remarkCodeMeta } from "@/lib/remark-code-meta"
+import { mdxComponents } from "./mdx-components"
+import type { ComponentPropsWithoutRef } from "react"
 import { DocNavigation } from "./doc-navigation"
 import { Breadcrumb } from "./breadcrumb"
 import { DocMetadata } from "./doc-metadata"
 import { DraftBadge } from "./draft-badge"
 import { DocTags } from "./doc-tags"
 import { SearchHighlight } from "./search-highlight"
-import { MDXContent } from "./mdx-content"
 import type { DocMeta } from "@/lib/mdx"
-import { processContentWithEnv, type SpecraConfig } from "@/lib/config"
+import { getConfig, processContentWithEnv, type SpecraConfig } from "@/lib/config"
 
 interface DocLayoutProps {
   meta: DocMeta
@@ -27,7 +32,7 @@ interface DocLayoutProps {
 
 
 
-export function DocLayout({ content, meta, previousDoc, nextDoc, version, slug, config }: DocLayoutProps) {
+export async function DocLayout({ content, meta, previousDoc, nextDoc, version, slug, config }: DocLayoutProps) {
   const isDevelopment = process.env.NODE_ENV === "development"
   // const config = getConfig()
 
@@ -57,7 +62,18 @@ export function DocLayout({ content, meta, previousDoc, nextDoc, version, slug, 
       <DocMetadata meta={meta} config={config} />
 
       <div className="prose prose-slate dark:prose-invert max-w-none prose-headings:scroll-mt-24 prose-headings:font-semibold prose-h1:text-4xl prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-4 prose-h3:text-2xl prose-h3:mt-8 prose-h3:mb-3 prose-p:text-base prose-p:leading-7 prose-p:text-muted-foreground prose-p:mb-4 prose-a:font-normal prose-a:transition-all prose-code:text-primary prose-code:bg-muted/50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:text-[13px] prose-code:font-mono prose-code:border prose-code:border-border/50 prose-code:before:content-none prose-code:after:content-none prose-pre:bg-transparent prose-pre:p-0 prose-ul:list-disc prose-ul:list-inside prose-ul:space-y-2 prose-ul:mb-4 prose-ol:list-decimal prose-ol:list-inside prose-ol:space-y-2 prose-ol:mb-4 prose-li:leading-7 prose-li:text-muted-foreground prose-strong:text-foreground prose-strong:font-semibold">
-        <MDXContent source={processedContent} />
+        <MDXRemote
+          source={processedContent}
+          options={{
+            parseFrontmatter: false,
+            mdxOptions: {
+              remarkPlugins: [remarkGfm, remarkCodeMeta],
+              rehypePlugins: [rehypeSlug],
+              development: false,
+            },
+          }}
+          components={mdxComponents as any}
+        />
       </div>
 
       {config.features?.showTags && meta.tags && meta.tags.length > 0 && <DocTags tags={meta.tags} />}

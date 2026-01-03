@@ -1,5 +1,7 @@
+"use client"
+
 import * as React from "react"
-import { SpecraConfig, defaultConfig } from "./config.types"
+import { SpecraConfig, defaultConfig } from "../lib/config.types"
 
 const ConfigContext = React.createContext<SpecraConfig>(defaultConfig)
 

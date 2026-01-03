@@ -4,7 +4,6 @@ import { getCachedVersions, getCachedAllDocs, getCachedDocBySlug } from "../lib/
 import { DocLayout } from "../components/docs/doc-layout"
 import { TableOfContents } from "../components/docs/table-of-contents"
 import { Header } from "../components/docs/header"
-import { DocLayoutWrapper } from "../components/docs/doc-layout-wrapper"
 import { HotReloadIndicator } from "../components/docs/hot-reload-indicator"
 import { DevModeBadge } from "../components/docs/dev-mode-badge"
 import { MdxHotReload } from "../components/docs/mdx-hot-reload"
@@ -13,6 +12,7 @@ import { NotFoundContent } from "../components/docs/not-found-content"
 import { getConfig } from "../lib/config"
 import { Suspense } from "react"
 import { DocLoading } from "../components/docs/doc-loading"
+import { DocLayoutWrapper } from "../components/docs/doc-layout-wrapper"
 
 interface PageProps {
   params: Promise<{
@@ -117,7 +117,7 @@ export default async function DocPage({ params }: PageProps) {
           header={<Header currentVersion={version} versions={versions} config={config} />}
           docs={allDocs}
           version={version}
-          content={
+          children={
             <CategoryIndex
               categoryPath={slug}
               version={version}
@@ -147,7 +147,7 @@ export default async function DocPage({ params }: PageProps) {
             header={<Header currentVersion={version} versions={versions} config={config} />}
             docs={allDocs}
             version={version}
-            content={<NotFoundContent version={version} />}
+            children={<NotFoundContent version={version} />}
             toc={<div />}
             config={config}
             currentPageTabGroup={undefined}
@@ -176,7 +176,7 @@ export default async function DocPage({ params }: PageProps) {
           header={<Header currentVersion={version} versions={versions} config={config} />}
           docs={allDocs}
           version={version}
-          content={
+          children={
             showCategoryIndex ? (
               <CategoryIndex
                 categoryPath={slug}

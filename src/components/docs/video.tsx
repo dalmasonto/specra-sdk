@@ -1,5 +1,3 @@
-
-
 interface VideoProps {
   src: string
   caption?: string

@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 import { Search, Menu, Github, Twitter, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -7,7 +9,7 @@ import { SearchModal } from "./search-modal"
 import { Logo } from "./logo"
 import { useState, useEffect } from "react"
 import type { SpecraConfig } from "@/lib/config"
-import { useConfig } from "@/lib/config.context"
+import { useConfig } from "../config-provider"
 
 interface HeaderProps {
   currentVersion: string

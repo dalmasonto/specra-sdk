@@ -1,5 +1,3 @@
-
-
 import Link from "next/link"
 import { AlertTriangle, Home, ArrowLeft } from "lucide-react"
 

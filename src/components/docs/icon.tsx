@@ -1,3 +1,5 @@
+"use client"
+
 import * as LucideIcons from "lucide-react"
 
 interface IconProps {

@@ -15,14 +15,14 @@ interface MobileDocLayoutProps {
   header: ReactNode
   docs: Doc[]
   version: string
-  content: ReactNode
+  children: ReactNode
   toc: ReactNode
   config: SpecraConfig
   activeTabGroup?: string
   onTabChange?: (tabId: string) => void
 }
 
-export function MobileDocLayout({ header, docs, version, content, toc, config, activeTabGroup, onTabChange }: MobileDocLayoutProps) {
+export function MobileDocLayout({ header, docs, version, children, toc, config, activeTabGroup, onTabChange }: MobileDocLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const handleTabChange = (tabId: string) => {
@@ -143,7 +143,7 @@ export function MobileDocLayout({ header, docs, version, content, toc, config, a
           <div className="flex-1 min-w-0">
             <div className="flex flex-col gap-2 px-2 md:px-8">
               {/* Content */}
-              {content}
+              {children}
 
               {/* Footer */}
               <Footer config={config} />
@@ -157,8 +157,6 @@ export function MobileDocLayout({ header, docs, version, content, toc, config, a
 
 
       </main>
-
-
 
     </div>
   )

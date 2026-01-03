@@ -26,7 +26,6 @@ export * from "./image"
 export * from "./logo"
 export * from "./math"
 export * from "./mdx-components"
-export * from "./mdx-content"
 export * from "./mdx-hot-reload"
 export * from "./mermaid"
 export * from "./mobile-doc-layout"
@@ -46,8 +45,8 @@ export * from "./tooltip"
 export * from "./version-switcher"
 export * from "./video"
 
-// Re-export ConfigProvider from lib (client component for config context)
-export { ConfigProvider, useConfig, useConfigValue } from "../../lib/config.context"
+// Re-export ConfigProvider from components
+export { ConfigProvider, useConfig, useConfigValue } from "../config-provider"
 
 // API documentation components
 export * from "./api"

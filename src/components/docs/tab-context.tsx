@@ -1,19 +1,20 @@
+"use client"
 
-
-import { createContext, useContext, useState, ReactNode } from "react"
+// import { createContext, useContext, useState, ReactNode } from "react"
+import * as React from "react"
 
 interface TabContextType {
   activeTabGroup: string
   setActiveTabGroup: (tabId: string) => void
 }
 
-const TabContext = createContext<TabContextType | undefined>(undefined)
+const TabContext = React.createContext<TabContextType | undefined>(undefined)
 
 const TAB_STORAGE_KEY = "specra-active-tab-group"
 
-export function TabProvider({ children, defaultTab }: { children: ReactNode; defaultTab: string }) {
+export function TabProvider({ children, defaultTab }: { children: React.ReactNode; defaultTab: string }) {
   // Initialize from localStorage if available, otherwise use defaultTab
-  const [activeTabGroup, setActiveTabGroupState] = useState(() => {
+  const [activeTabGroup, setActiveTabGroupState] = React.useState(() => {
     if (typeof window !== "undefined") {
       try {
         const stored = localStorage.getItem(TAB_STORAGE_KEY)
@@ -45,7 +46,7 @@ export function TabProvider({ children, defaultTab }: { children: ReactNode; def
 }
 
 export function useTabContext() {
-  const context = useContext(TabContext)
+  const context = React.useContext(TabContext)
   if (!context) {
     throw new Error("useTabContext must be used within TabProvider")
   }

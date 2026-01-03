@@ -1,4 +1,4 @@
-
+"use client"
 
 import { useState, useEffect } from "react"
 import type { SpecraApiSpec } from "@/lib/api-parser.types"

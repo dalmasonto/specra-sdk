@@ -1,6 +1,6 @@
-
+"use client"
+import * as React from "react"
 import { ChevronDown } from "lucide-react"
-import { useState } from "react"
 
 interface AccordionItemProps {
   title: string | React.ReactNode
@@ -10,7 +10,7 @@ interface AccordionItemProps {
 }
 
 export function AccordionItem({ title, children, defaultOpen = false }: AccordionItemProps) {
-  const [isOpen, setIsOpen] = useState(defaultOpen)
+  const [isOpen, setIsOpen] = React.useState(defaultOpen)
 
   return (
     <div className="border border-border rounded-xl overflow-hidden mb-2">

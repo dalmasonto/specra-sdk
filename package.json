@@ -1,6 +1,6 @@
 {
   "name": "specra",
-  "version": "0.1.27",
+  "version": "0.1.46",
   "description": "A modern documentation library for Next.js with built-in versioning, API reference generation, full-text search, and MDX support",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -45,7 +45,7 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "rm -rf dist && tsup",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
     "postinstall": "node scripts/postinstall.js"

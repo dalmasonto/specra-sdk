@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { getConfig } from "../lib/config"
 import { getAssetPath } from "../lib/utils"
-import { ConfigProvider } from "../lib/config.context"
+import { ConfigProvider } from "../components/config-provider"
 import { TabProvider } from "../components/docs/tab-context"
 import "../styles/globals.css"
 

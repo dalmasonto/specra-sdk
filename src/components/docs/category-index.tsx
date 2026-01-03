@@ -1,8 +1,13 @@
 import Link from "next/link"
 import { ChevronRight, FileText } from "lucide-react"
 import type { Doc } from "@/lib/mdx"
-import { MDXContent } from "./mdx-content"
-import { processContentWithEnv, SpecraConfig } from "@/lib/config"
+import { ReactNode } from "react"
+import { MDXRemote } from "next-mdx-remote/rsc"
+import remarkGfm from "remark-gfm"
+import { remarkCodeMeta } from "@/lib/remark-code-meta"
+import rehypeSlug from "rehype-slug"
+import { mdxComponents } from "./mdx-components"
+import { getConfig, processContentWithEnv, SpecraConfig } from "@/lib/config"
 import { sortSidebarItems } from "@/lib/sidebar-utils"
 
 interface CategoryIndexProps {
@@ -15,7 +20,7 @@ interface CategoryIndexProps {
   config: SpecraConfig
 }
 
-export async function CategoryIndex({ categoryPath, version, allDocs, title, description, content , config}: CategoryIndexProps) {
+export function CategoryIndex({ categoryPath, version, allDocs, title, description, content , config}: CategoryIndexProps) {
   // Find all docs that are direct children of this category
   const childDocs = allDocs.filter((doc) => {
     // Get the parent path of the doc
@@ -26,7 +31,13 @@ export async function CategoryIndex({ categoryPath, version, allDocs, title, des
     return docParent === categoryPath && doc.slug !== categoryPath
   })
 
-  const processedContent = content ? processContentWithEnv(content, config) : ""
+  // const config = getConfig();
+  const processedContent = () => {
+    if(content){
+      return processContentWithEnv(content, config);
+    }
+    return "";
+  };
 
   // Sort by sidebar_position using unified sorting function
   const sortedDocs = sortSidebarItems(childDocs)
@@ -37,11 +48,21 @@ export async function CategoryIndex({ categoryPath, version, allDocs, title, des
         <h1 className="text-4xl font-bold tracking-tight mb-3 text-foreground">{title}</h1>
         {description && <p className="text-lg text-muted-foreground leading-relaxed">{description}</p>}
 
-        {content && (
-          <div className="prose prose-slate dark:prose-invert max-w-none prose-headings:scroll-mt-24 prose-headings:font-semibold prose-h1:text-4xl prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-4 prose-h3:text-2xl prose-h3:mt-8 prose-h3:mb-3 prose-p:text-base prose-p:leading-7 prose-p:text-muted-foreground prose-p:mb-4 prose-a:font-normal prose-a:transition-all prose-code:text-primary prose-code:bg-muted/50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:text-[13px] prose-code:font-mono prose-code:border prose-code:border-border/50 prose-code:before:content-none prose-code:after:content-none prose-pre:bg-transparent prose-pre:p-0 prose-ul:list-disc prose-ul:list-inside prose-ul:space-y-2 prose-ul:mb-4 prose-ol:list-decimal prose-ol:list-inside prose-ol:space-y-2 prose-ol:mb-4 prose-li:leading-7 prose-li:text-muted-foreground prose-strong:text-foreground prose-strong:font-semibold">
-            <MDXContent source={processedContent} />
-          </div>
-        )}
+        <div className="prose prose-slate dark:prose-invert max-w-none prose-headings:scroll-mt-24 prose-headings:font-semibold prose-h1:text-4xl prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-4 prose-h3:text-2xl prose-h3:mt-8 prose-h3:mb-3 prose-p:text-base prose-p:leading-7 prose-p:text-muted-foreground prose-p:mb-4 prose-a:font-normal prose-a:transition-all prose-code:text-primary prose-code:bg-muted/50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:text-[13px] prose-code:font-mono prose-code:border prose-code:border-border/50 prose-code:before:content-none prose-code:after:content-none prose-pre:bg-transparent prose-pre:p-0 prose-ul:list-disc prose-ul:list-inside prose-ul:space-y-2 prose-ul:mb-4 prose-ol:list-decimal prose-ol:list-inside prose-ol:space-y-2 prose-ol:mb-4 prose-li:leading-7 prose-li:text-muted-foreground prose-strong:text-foreground prose-strong:font-semibold">
+                <MDXRemote
+                  source={processedContent()}
+                  options={{
+                    parseFrontmatter: false,
+                    mdxOptions: {
+                      remarkPlugins: [remarkGfm, remarkCodeMeta],
+                      rehypePlugins: [rehypeSlug],
+                      development: false,
+                    },
+                  }}
+                  components={mdxComponents as any}
+                />
+              </div>
+
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">

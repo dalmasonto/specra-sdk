@@ -78,18 +78,36 @@ const DANGEROUS_PATTERNS = [
   // Script tag injection
   /<script[>\s]/gi,
   /javascript:/gi,
-  /on\w+\s*=/gi, // onclick, onerror, onload, etc.
+  /\bon(abort|blur|cancel|canplay|canplaythrough|change|click|close|contextmenu|cuechange|dblclick|drag|dragend|dragenter|dragleave|dragover|dragstart|drop|durationchange|emptied|ended|error|focus|input|invalid|keydown|keypress|keyup|load|loadeddata|loadedmetadata|loadstart|mousedown|mouseenter|mouseleave|mousemove|mouseout|mouseover|mouseup|mousewheel|pause|play|playing|progress|ratechange|reset|resize|scroll|seeked|seeking|select|show|stalled|submit|suspend|timeupdate|toggle|volumechange|waiting|wheel)\s*=/gi, // onclick, onerror, onload, etc.
 ]
+
+/**
+ * Remove code blocks from content to avoid scanning code examples
+ * This prevents false positives from documentation code examples
+ */
+function removeCodeBlocks(content: string): string {
+  // Remove fenced code blocks (```...```)
+  let withoutCodeBlocks = content.replace(/```[\s\S]*?```/g, '')
+
+  // Remove inline code (`...`)
+  withoutCodeBlocks = withoutCodeBlocks.replace(/`[^`]*`/g, '')
+
+  return withoutCodeBlocks
+}
 
 /**
  * Scan MDX content for dangerous patterns
  * Returns array of detected issues
+ * Note: Skips content inside code blocks to avoid false positives
  */
 export function scanMDXForDangerousPatterns(content: string): string[] {
   const issues: string[] = []
 
+  // Remove code blocks before scanning to avoid false positives
+  const contentWithoutCode = removeCodeBlocks(content)
+
   for (const pattern of DANGEROUS_PATTERNS) {
-    const matches = content.match(pattern)
+    const matches = contentWithoutCode.match(pattern)
     if (matches) {
       issues.push(`Dangerous pattern detected: ${pattern.source}`)
     }

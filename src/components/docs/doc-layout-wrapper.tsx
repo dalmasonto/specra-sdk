@@ -1,3 +1,5 @@
+"use client"
+
 import { ReactNode, useEffect, useRef } from "react"
 import { MobileDocLayout } from "./mobile-doc-layout"
 import { useTabContext } from "./tab-context"
@@ -8,13 +10,13 @@ interface DocLayoutWrapperProps {
   header: ReactNode
   docs: Doc[]
   version: string
-  content: ReactNode
+  children: ReactNode
   toc: ReactNode
   config: SpecraConfig
   currentPageTabGroup?: string
 }
 
-export function DocLayoutWrapper({ header, docs, version, content, toc, config, currentPageTabGroup }: DocLayoutWrapperProps) {
+export function DocLayoutWrapper({ header, docs, version, children, toc, config, currentPageTabGroup }: DocLayoutWrapperProps) {
   // Use global tab context instead of local state
   const { activeTabGroup, setActiveTabGroup } = useTabContext()
   const lastPageTabGroupRef = useRef<string | undefined>(undefined)
@@ -54,11 +56,12 @@ export function DocLayoutWrapper({ header, docs, version, content, toc, config, 
       header={header}
       docs={docs}
       version={version}
-      content={content}
       toc={toc}
       config={config}
       activeTabGroup={activeTabGroup}
       onTabChange={setActiveTabGroup}
-    />
+    >
+      {children}
+    </MobileDocLayout>
   )
 }

@@ -1,4 +1,4 @@
-
+"use client"
 
 import { type ReactNode, useState } from "react"
 import { ChevronDown } from "lucide-react"
