@@ -68,7 +68,7 @@ export function SiteBanner({ config }: SiteBannerProps) {
 
   return (
     <div className={`w-full border-b ${border} ${bg}`}>
-      <div className="container mx-auto px-6 py-3">
+      <div className="container mx-auto px-2 md:px-6 py-3">
         <div className="flex items-center gap-3">
           <IconComponent className={`h-5 w-5 shrink-0 ${iconColor}`} />
           <div className="flex-1 min-w-0">

@@ -12,7 +12,7 @@ export function Footer({ config }: { config: SpecraConfig }) {
 
   return (
     <footer className="bg-muted/30 dark:bg-muted/10 rounded-2xl mt-24">
-      <div className="px-6 py-12">
+      <div className="px-2 md:px-6 py-12">
         {config.footer.links && config.footer.links.length > 0 && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
             {config.footer.links.map((column, idx) => (

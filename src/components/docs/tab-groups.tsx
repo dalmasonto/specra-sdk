@@ -107,7 +107,7 @@ export function TabGroups({ tabGroups, activeTabId, onTabChange, mobileOnly = fa
 
   return (
     <div className="sticky top-16 z-30 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-6">
+      <div className="container mx-auto px-2 md:px-6">
         {/* Mobile Dropdown */}
         <div className="md:hidden relative">
           <button

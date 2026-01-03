@@ -128,7 +128,7 @@ export function MobileDocLayout({ header, docs, version, content, toc, config, a
       </div>
 
       {/* Main Content */}
-      <main className="container mx-auto px-6 py-8">
+      <main className="container mx-auto px-2 md:px-6 py-8">
         <div className="flex">
           {/* Desktop Sidebar */}
           <div className="hidden lg:block">
