@@ -1,4 +1,3 @@
-import "server-only"
 import { NextRequest } from 'next/server'
 import { watch } from 'fs'
 import { join } from 'path'

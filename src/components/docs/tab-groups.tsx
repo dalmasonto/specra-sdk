@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { ChevronDown } from "lucide-react"
 import { Icon } from "./icon"
 import type { TabGroup } from "@/lib/config.types"
@@ -9,20 +10,87 @@ interface TabGroupsProps {
   tabGroups: TabGroup[]
   activeTabId?: string
   onTabChange?: (tabId: string) => void
+  mobileOnly?: boolean
+  docs?: Array<{ slug: string; meta?: { tab_group?: string }; categoryTabGroup?: string }>
+  version?: string
 }
 
-export function TabGroups({ tabGroups, activeTabId, onTabChange }: TabGroupsProps) {
+export function TabGroups({ tabGroups, activeTabId, onTabChange, mobileOnly = false, docs, version }: TabGroupsProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const router = useRouter()
   const activeTab = activeTabId || tabGroups[0]?.id || ""
   const activeTabData = tabGroups.find(tab => tab.id === activeTab)
 
   const handleTabChange = (tabId: string) => {
     onTabChange?.(tabId)
     setDropdownOpen(false)
+
+    // Navigate to the first item in the new tab group if docs are provided
+    if (docs && version) {
+      const firstDocInTab = docs.find((doc) => {
+        const docTabGroup = doc.meta?.tab_group || doc.categoryTabGroup
+        return docTabGroup === tabId || (!docTabGroup && tabId === tabGroups[0]?.id)
+      })
+
+      if (firstDocInTab) {
+        router.push(`/docs/${version}/${firstDocInTab.slug}`)
+      }
+    }
   }
 
   if (!tabGroups || tabGroups.length === 0) {
     return null
+  }
+
+  // Mobile only version (for sidebar)
+  if (mobileOnly) {
+    return (
+      <div className="relative">
+        <button
+          onClick={() => setDropdownOpen(!dropdownOpen)}
+          className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-foreground bg-muted/50 rounded-lg hover:bg-muted transition-colors"
+          aria-label="Select tab group"
+          aria-expanded={dropdownOpen}
+        >
+          <div className="flex items-center gap-2">
+            {activeTabData?.icon && <Icon icon={activeTabData.icon} size={16} className="shrink-0" />}
+            <span>{activeTabData?.label}</span>
+          </div>
+          <ChevronDown
+            className={`h-4 w-4 transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
+          />
+        </button>
+
+        {dropdownOpen && (
+          <>
+            <div
+              className="fixed inset-0 z-40"
+              onClick={() => setDropdownOpen(false)}
+            />
+            <div className="absolute top-full left-0 right-0 mt-2 bg-background border border-border rounded-lg shadow-lg z-50 max-h-[60vh] overflow-y-auto">
+              {tabGroups.map((tab) => {
+                const isActive = tab.id === activeTab
+
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => handleTabChange(tab.id)}
+                    className={`flex items-center gap-2 w-full px-3 py-2 text-sm font-medium text-left transition-colors first:rounded-t-lg last:rounded-b-lg ${
+                      isActive
+                        ? "bg-primary/10 text-primary"
+                        : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                    }`}
+                  >
+                    {tab.icon && <Icon icon={tab.icon} size={16} className="shrink-0" />}
+                    {tab.label}
+                  </button>
+                )
+              })}
+            </div>
+          </>
+        )}
+      </div>
+    )
   }
 
   return (

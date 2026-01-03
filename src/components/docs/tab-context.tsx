@@ -9,8 +9,33 @@ interface TabContextType {
 
 const TabContext = createContext<TabContextType | undefined>(undefined)
 
+const TAB_STORAGE_KEY = "specra-active-tab-group"
+
 export function TabProvider({ children, defaultTab }: { children: ReactNode; defaultTab: string }) {
-  const [activeTabGroup, setActiveTabGroup] = useState(defaultTab)
+  // Initialize from localStorage if available, otherwise use defaultTab
+  const [activeTabGroup, setActiveTabGroupState] = useState(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = localStorage.getItem(TAB_STORAGE_KEY)
+        return stored || defaultTab
+      } catch {
+        return defaultTab
+      }
+    }
+    return defaultTab
+  })
+
+  // Wrapper to persist to localStorage when tab changes
+  const setActiveTabGroup = (tabId: string) => {
+    setActiveTabGroupState(tabId)
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem(TAB_STORAGE_KEY, tabId)
+      } catch {
+        // Ignore localStorage errors
+      }
+    }
+  }
 
   return (
     <TabContext.Provider value={{ activeTabGroup, setActiveTabGroup }}>

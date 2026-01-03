@@ -14,8 +14,8 @@ export interface SiteConfig {
   url?: string
   /** Base URL path for the documentation (e.g., '/docs') */
   baseUrl?: string
-  /** Path to the site logo */
-  logo?: string
+  /** Path to the site logo - can be a string or an object with light/dark variants */
+  logo?: string | { light: string; dark: string }
   /** Path to the favicon */
   favicon?: string
   /** Default language for the documentation */
@@ -26,6 +26,10 @@ export interface SiteConfig {
   projectName?: string
   /** Active/default version for the documentation */
   activeVersion?: string
+  /** Whether to hide the site title in the header */
+  hideTitle?: boolean
+  /** Whether to hide the site logo in the header */
+  hideLogo?: boolean
 }
 
 /**

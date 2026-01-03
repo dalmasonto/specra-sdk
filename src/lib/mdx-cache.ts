@@ -6,7 +6,7 @@
  * invalidated automatically when files change.
  */
 
-import "server-only"
+// Note: This file uses server-only APIs (fs, path) and should only be imported in Server Components
 import { Doc, getVersions, getAllDocs, getDocBySlug } from './mdx'
 import { watch } from 'fs'
 import { join } from 'path'

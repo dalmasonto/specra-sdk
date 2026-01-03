@@ -1,5 +1,3 @@
-import "server-only"
-import specraConfigJson from "../specra.config.json"
 import { SpecraConfig, defaultConfig } from "./config.types"
 
 /**

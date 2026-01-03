@@ -1,4 +1,4 @@
-import "server-only"
+// Note: This file uses server-only APIs (fs, path) and should only be imported in Server Components
 import fs from "fs"
 import path from "path"
 
