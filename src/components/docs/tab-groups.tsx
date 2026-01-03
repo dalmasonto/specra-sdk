@@ -18,8 +18,20 @@ interface TabGroupsProps {
 export function TabGroups({ tabGroups, activeTabId, onTabChange, mobileOnly = false, docs, version }: TabGroupsProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const router = useRouter()
-  const activeTab = activeTabId || tabGroups[0]?.id || ""
-  const activeTabData = tabGroups.find(tab => tab.id === activeTab)
+
+  // Filter out tabs that have no associated docs
+  const filteredTabGroups = docs
+    ? tabGroups.filter((tab) => {
+        const hasDocsInTab = docs.some((doc) => {
+          const docTabGroup = doc.meta?.tab_group || doc.categoryTabGroup
+          return docTabGroup === tab.id || (!docTabGroup && tab.id === tabGroups[0]?.id)
+        })
+        return hasDocsInTab
+      })
+    : tabGroups
+
+  const activeTab = activeTabId || filteredTabGroups[0]?.id || ""
+  const activeTabData = filteredTabGroups.find(tab => tab.id === activeTab)
 
   const handleTabChange = (tabId: string) => {
     onTabChange?.(tabId)
@@ -29,7 +41,7 @@ export function TabGroups({ tabGroups, activeTabId, onTabChange, mobileOnly = fa
     if (docs && version) {
       const firstDocInTab = docs.find((doc) => {
         const docTabGroup = doc.meta?.tab_group || doc.categoryTabGroup
-        return docTabGroup === tabId || (!docTabGroup && tabId === tabGroups[0]?.id)
+        return docTabGroup === tabId || (!docTabGroup && tabId === filteredTabGroups[0]?.id)
       })
 
       if (firstDocInTab) {
@@ -38,7 +50,7 @@ export function TabGroups({ tabGroups, activeTabId, onTabChange, mobileOnly = fa
     }
   }
 
-  if (!tabGroups || tabGroups.length === 0) {
+  if (!filteredTabGroups || filteredTabGroups.length === 0) {
     return null
   }
 
@@ -68,7 +80,7 @@ export function TabGroups({ tabGroups, activeTabId, onTabChange, mobileOnly = fa
               onClick={() => setDropdownOpen(false)}
             />
             <div className="absolute top-full left-0 right-0 mt-2 bg-background border border-border rounded-lg shadow-lg z-50 max-h-[60vh] overflow-y-auto">
-              {tabGroups.map((tab) => {
+              {filteredTabGroups.map((tab) => {
                 const isActive = tab.id === activeTab
 
                 return (
@@ -120,7 +132,7 @@ export function TabGroups({ tabGroups, activeTabId, onTabChange, mobileOnly = fa
                 onClick={() => setDropdownOpen(false)}
               />
               <div className="absolute top-full left-0 right-0 bg-background border border-border shadow-lg z-50 max-h-[60vh] overflow-y-auto">
-                {tabGroups.map((tab) => {
+                {filteredTabGroups.map((tab) => {
                   const isActive = tab.id === activeTab
 
                   return (
@@ -145,7 +157,7 @@ export function TabGroups({ tabGroups, activeTabId, onTabChange, mobileOnly = fa
 
         {/* Desktop Tabs */}
         <nav className="hidden md:flex gap-1" aria-label="Documentation tabs">
-          {tabGroups.map((tab) => {
+          {filteredTabGroups.map((tab) => {
             const isActive = tab.id === activeTab
 
             return (
