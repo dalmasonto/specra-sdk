@@ -26,3 +26,6 @@ export * from './sidebar-utils'
 export * from './category'
 export * from './redirects'
 export * from './dev-utils'
+
+// Security
+export * from './mdx-security'

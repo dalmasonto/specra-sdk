@@ -3,6 +3,7 @@ import path from "path"
 import matter from "gray-matter"
 import { getAllCategoryConfigs } from "./category"
 import { sortSidebarItems, sortSidebarGroups, buildSidebarStructure, type SidebarGroup } from "./sidebar-utils"
+import { sanitizePath, validatePathWithinDirectory, validateMDXSecurity } from "./mdx-security"
 
 const DOCS_DIR = path.join(process.cwd(), "docs")
 
@@ -102,11 +103,35 @@ function readDocFromFile(filePath: string, originalSlug: string): Doc | null {
       return null
     }
 
+    // Validate path is within allowed directory
+    if (!validatePathWithinDirectory(filePath, DOCS_DIR)) {
+      console.error(`[Security] Path traversal attempt blocked: ${filePath}`)
+      return null
+    }
+
     const fileContents = fs.readFileSync(filePath, "utf8")
     const { data, content } = matter(fileContents)
 
+    // Security: Validate MDX content for dangerous patterns
+    const securityCheck = validateMDXSecurity(content, {
+      strictMode: process.env.NODE_ENV === 'production',
+      blockDangerousPatterns: true,
+    })
+
+    if (!securityCheck.valid) {
+      console.error(`[Security] MDX validation failed for ${filePath}:`, securityCheck.issues)
+      if (process.env.NODE_ENV === 'production') {
+        return null
+      }
+      // In development, log warnings but continue
+      console.warn('[Security] Continuing in development mode with sanitized content')
+    }
+
+    // Use sanitized content if available
+    const safeContent = securityCheck.sanitized || content
+
     // Calculate reading time
-    const { minutes, words } = calculateReadingTime(content)
+    const { minutes, words } = calculateReadingTime(safeContent)
 
     // If custom slug provided, replace only the filename part, keep the folder structure
     let finalSlug = originalSlug
@@ -130,11 +155,11 @@ function readDocFromFile(filePath: string, originalSlug: string): Doc | null {
       title: data.title || originalSlug,
       meta: {
         ...data,
-        content,
+        content: safeContent,
         reading_time: minutes,
         word_count: words,
       } as DocMeta,
-      content,
+      content: safeContent,
     }
   } catch (error) {
     console.error(`Error reading file ${filePath}:`, error)
@@ -144,20 +169,24 @@ function readDocFromFile(filePath: string, originalSlug: string): Doc | null {
 
 export async function getDocBySlug(slug: string, version = "v1.0.0"): Promise<Doc | null> {
   try {
+    // Security: Sanitize and validate slug to prevent path traversal
+    const sanitizedSlug = sanitizePath(slug)
+    const sanitizedVersion = sanitizePath(version)
+
     // Try direct file first
-    let filePath = path.join(DOCS_DIR, version, `${slug}.mdx`)
-    let doc = readDocFromFile(filePath, slug)
+    let filePath = path.join(DOCS_DIR, sanitizedVersion, `${sanitizedSlug}.mdx`)
+    let doc = readDocFromFile(filePath, sanitizedSlug)
 
     if (doc) return doc
 
     // If not found, try index.mdx in the folder
-    filePath = path.join(DOCS_DIR, version, slug, "index.mdx")
-    doc = readDocFromFile(filePath, slug)
+    filePath = path.join(DOCS_DIR, sanitizedVersion, sanitizedSlug, "index.mdx")
+    doc = readDocFromFile(filePath, sanitizedSlug)
 
     if (doc) return doc
 
     // If still not found, search all docs for a matching custom slug
-    const versionDir = path.join(DOCS_DIR, version)
+    const versionDir = path.join(DOCS_DIR, sanitizedVersion)
     if (!fs.existsSync(versionDir)) {
       return null
     }
@@ -169,7 +198,7 @@ export async function getDocBySlug(slug: string, version = "v1.0.0"): Promise<Do
       const testPath = path.join(versionDir, file.endsWith("index.mdx") ? file : `${fileSlug}.mdx`)
       const testDoc = readDocFromFile(testPath, fileSlug)
 
-      if (testDoc && testDoc.slug === slug) {
+      if (testDoc && testDoc.slug === sanitizedSlug) {
         return testDoc
       }
     }

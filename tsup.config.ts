@@ -33,6 +33,7 @@ export default defineConfig([
       'app/docs-page': 'src/app/docs-page.tsx',
       'app/api/mdx-watch/route': 'src/app/api/mdx-watch/route.ts',
       'lib/index': 'src/lib/index.ts',
+      'middleware/security': 'src/middleware/security.ts',
     },
     format: ['esm', 'cjs'],
     dts: true,
