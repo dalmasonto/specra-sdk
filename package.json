@@ -31,17 +31,20 @@
       "import": "./dist/lib/index.js"
     },
     "./styles": "./dist/index.css",
-    "./styles.css": "./dist/index.css"
+    "./styles.css": "./dist/index.css",
+    "./config.schema.json": "./src/lib/config.schema.json"
   },
   "files": [
     "dist",
     "src",
+    "scripts",
     "README.md"
   ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "postinstall": "node scripts/postinstall.js"
   },
   "keywords": [
     "documentation",
