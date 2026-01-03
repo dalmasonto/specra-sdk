@@ -79,21 +79,19 @@ export function MobileDocLayout({ header, docs, version, content, toc, config, a
                 <Logo
                   logo={config.site?.logo}
                   alt={config.site?.title || "Logo"}
-                  className="h-8 w-8 object-contain"
+                  className="w-18 object-contain"
                 />
               )}
-              {!config.site?.hideTitle && (
-                <div className="flex flex-col">
-                  <span className="font-semibold text-foreground group-hover:text-primary transition-colors">
-                    {config.site?.title || "Documentation"}
+              <div className="flex flex-col">
+                <span className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                  {config.site?.title || "Documentation"}
+                </span>
+                {config.site?.description && (
+                  <span className="text-xs text-muted-foreground line-clamp-1">
+                    {config.site.description}
                   </span>
-                  {config.site?.description && (
-                    <span className="text-xs text-muted-foreground line-clamp-1">
-                      {config.site.description}
-                    </span>
-                  )}
-                </div>
-              )}
+                )}
+              </div>
             </Link>
           </div>
 

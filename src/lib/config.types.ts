@@ -140,6 +140,20 @@ export interface AnalyticsConfig {
 }
 
 /**
+ * Footer branding configuration
+ */
+export interface FooterBranding {
+  /** Whether to show the branding */
+  showBranding?: boolean
+  /** Logo for the branding - can be a string or an object with light/dark variants */
+  logo?: string | { light: string; dark: string }
+  /** Title text for the branding */
+  title?: string
+  /** URL to link to when branding is clicked */
+  url?: string
+}
+
+/**
  * Footer configuration
  */
 export interface FooterConfig {
@@ -155,6 +169,8 @@ export interface FooterConfig {
   }>
   /** Custom footer content */
   customContent?: string
+  /** Branding configuration for "Powered by" section */
+  branding?: FooterBranding
 }
 
 /**
