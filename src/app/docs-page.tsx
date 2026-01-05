@@ -1,13 +1,12 @@
 import type { Metadata } from "next"
 import { extractTableOfContents, getAdjacentDocs, isCategoryPage } from "../lib/mdx"
 import { getCachedVersions, getCachedAllDocs, getCachedDocBySlug } from "../lib/mdx-cache"
-import { DocLayout } from "../components/docs/doc-layout"
+import { DocLayout, CategoryIndex } from "../layouts"
 import { TableOfContents } from "../components/docs/table-of-contents"
 import { Header } from "../components/docs/header"
 import { HotReloadIndicator } from "../components/docs/hot-reload-indicator"
 import { DevModeBadge } from "../components/docs/dev-mode-badge"
 import { MdxHotReload } from "../components/docs/mdx-hot-reload"
-import { CategoryIndex } from "../components/docs/category-index"
 import { NotFoundContent } from "../components/docs/not-found-content"
 import { getConfig } from "../lib/config"
 import { Suspense } from "react"
@@ -126,6 +125,7 @@ export default async function DocPage({ params }: PageProps) {
               title={slug.split("/").pop()?.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()) || "Category"}
               description="Browse the documentation in this section."
               config={config}
+              mdxComponents={useMDXComponents(mdxComponents) as any}
             />
           }
           toc={<div />}
@@ -187,6 +187,7 @@ export default async function DocPage({ params }: PageProps) {
                 description={doc.meta.description}
                 content={doc.content}
                 config={config}
+                mdxComponents={useMDXComponents(mdxComponents) as any}
               />
             ) : (
               <DocLayout

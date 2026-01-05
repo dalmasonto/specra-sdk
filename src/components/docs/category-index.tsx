@@ -5,7 +5,6 @@ import { MDXRemote } from "next-mdx-remote/rsc"
 import remarkGfm from "remark-gfm"
 import { remarkCodeMeta } from "@/lib/remark-code-meta"
 import rehypeSlug from "rehype-slug"
-import { mdxComponents } from "./mdx-components"
 import { processContentWithEnv, SpecraConfig } from "@/lib/config"
 import { sortSidebarItems } from "@/lib/sidebar-utils"
 
@@ -17,9 +16,10 @@ interface CategoryIndexProps {
   description?: string
   content?: string
   config: SpecraConfig
+  mdxComponents: Record<string, React.ComponentType<any>>
 }
 
-export function CategoryIndex({ categoryPath, version, allDocs, title, description, content , config}: CategoryIndexProps) {
+export function CategoryIndex({ categoryPath, version, allDocs, title, description, content , config, mdxComponents }: CategoryIndexProps) {
   // Find all docs that are direct children of this category
   const childDocs = allDocs.filter((doc) => {
     // Get the parent path of the doc
