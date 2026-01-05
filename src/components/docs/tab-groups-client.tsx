@@ -1,6 +1,7 @@
 "use client"
 
 import { TabGroups } from "./tab-groups"
+import { useTabContext } from "./tab-context"
 import type { TabGroup } from "@/lib/config.types"
 
 interface TabGroupsClientProps {
@@ -15,11 +16,13 @@ interface TabGroupsClientProps {
  * from the server component tree
  */
 export function TabGroupsClient({ tabGroups, activeTabId, docs, version }: TabGroupsClientProps) {
+  const { setActiveTabGroup } = useTabContext()
+
   return (
     <TabGroups
       tabGroups={tabGroups}
       activeTabId={activeTabId}
-      onTabChange={() => {}}
+      onTabChange={setActiveTabGroup}
       docs={docs}
       version={version}
     />

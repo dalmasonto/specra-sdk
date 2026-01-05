@@ -1,4 +1,4 @@
-
+"use client"
 
 import { useState, ReactNode, cloneElement, isValidElement } from "react"
 import Link from "next/link"

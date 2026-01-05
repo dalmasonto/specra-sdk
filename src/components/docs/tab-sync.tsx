@@ -15,7 +15,6 @@ interface TabSyncProps {
  */
 export function TabSync({ currentPageTabGroup, config }: TabSyncProps) {
   const { activeTabGroup, setActiveTabGroup } = useTabContext()
-  const lastPageTabGroupRef = useRef<string | undefined>(undefined)
   const hasInitialized = useRef(false)
 
   useEffect(() => {
@@ -24,25 +23,20 @@ export function TabSync({ currentPageTabGroup, config }: TabSyncProps) {
       return
     }
 
-    // If we have a currentPageTabGroup, always sync to it
-    if (currentPageTabGroup) {
-      // Only update if it's different from the last one we set
-      if (lastPageTabGroupRef.current !== currentPageTabGroup) {
-        setActiveTabGroup(currentPageTabGroup)
-        lastPageTabGroupRef.current = currentPageTabGroup
-        hasInitialized.current = true
+    // Initialize with currentPageTabGroup or first tab on first load
+    if (!hasInitialized.current) {
+      const initialTab = currentPageTabGroup || config.navigation.tabGroups[0]?.id
+      if (initialTab && initialTab !== activeTabGroup) {
+        setActiveTabGroup(initialTab)
       }
+      hasInitialized.current = true
       return
     }
 
-    // If no currentPageTabGroup but we haven't initialized yet, set to first tab
-    if (!hasInitialized.current && !activeTabGroup) {
-      const firstTab = config.navigation.tabGroups[0]?.id
-      if (firstTab) {
-        setActiveTabGroup(firstTab)
-        lastPageTabGroupRef.current = firstTab
-        hasInitialized.current = true
-      }
+    // After initialization, only sync if the page's tab group doesn't match the active tab
+    // AND the page actually has a tab group (this handles navigation to pages with different tab groups)
+    if (currentPageTabGroup && currentPageTabGroup !== activeTabGroup) {
+      setActiveTabGroup(currentPageTabGroup)
     }
   }, [currentPageTabGroup, setActiveTabGroup, activeTabGroup, config.navigation?.tabGroups])
 
