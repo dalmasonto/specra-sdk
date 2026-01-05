@@ -177,8 +177,11 @@ export interface FooterConfig {
  * Documentation features
  */
 export interface FeaturesConfig {
-  /** Enable/disable edit this page links */
-  editUrl?: string | false
+  /**
+   * Enable/disable edit this page links.
+   * Provide a URL template (e.g., "https://github.com/user/repo/edit/main/docs") or false to disable
+   */
+  editUrl?: string | boolean
   /** Show last updated timestamp */
   showLastUpdated?: boolean
   /** Show reading time estimate */
@@ -253,6 +256,8 @@ export interface DeploymentConfig {
  * Main configuration interface
  */
 export interface SpecraConfig {
+  /** JSON Schema reference (for IDE support) */
+  $schema?: string
   /** Site metadata and branding */
   site: SiteConfig
   /** Theme and appearance settings */

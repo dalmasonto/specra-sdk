@@ -1,71 +1,79 @@
 {
   "name": "specra",
-  "version": "0.1.104",
+  "version": "0.1.117",
   "description": "A modern documentation library for Next.js with built-in versioning, API reference generation, full-text search, and MDX support",
   "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
     },
     "./app/layout": {
       "types": "./dist/app/layout.d.ts",
-      "import": "./dist/app/layout.js"
+      "import": "./dist/app/layout.mjs",
+      "require": "./dist/app/layout.js"
     },
     "./app/docs-page": {
       "types": "./dist/app/docs-page.d.ts",
-      "import": "./dist/app/docs-page.js"
+      "import": "./dist/app/docs-page.mjs",
+      "require": "./dist/app/docs-page.js"
     },
     "./app/api/mdx-watch": {
       "types": "./dist/app/api/mdx-watch/route.d.ts",
-      "import": "./dist/app/api/mdx-watch/route.js"
+      "import": "./dist/app/api/mdx-watch/route.mjs",
+      "require": "./dist/app/api/mdx-watch/route.js"
     },
     "./components": {
       "types": "./dist/components/index.d.ts",
-      "import": "./dist/components/index.js"
+      "import": "./dist/components/index.mjs",
+      "require": "./dist/components/index.js"
     },
     "./layouts": {
       "types": "./dist/layouts/index.d.ts",
-      "import": "./dist/layouts/index.js"
+      "import": "./dist/layouts/index.mjs",
+      "require": "./dist/layouts/index.js"
     },
     "./mdx-components": {
       "types": "./dist/mdx-components.d.ts",
-      "import": "./dist/mdx-components.js"
+      "import": "./dist/mdx-components.mjs",
+      "require": "./dist/mdx-components.js"
     },
     "./lib": {
       "types": "./dist/lib/index.d.ts",
-      "import": "./dist/lib/index.js"
+      "import": "./dist/lib/index.mjs",
+      "require": "./dist/lib/index.js"
     },
     "./middleware/security": {
       "types": "./dist/middleware/security.d.ts",
-      "import": "./dist/middleware/security.js"
+      "import": "./dist/middleware/security.mjs",
+      "require": "./dist/middleware/security.js"
     },
     "./next-config": {
-      "import": "./src/config/next-config.mjs"
+      "import": "./config/next-config.mjs"
     },
     "./next-config/default": {
-      "import": "./src/config/next.config.default.mjs"
+      "import": "./config/next.config.default.mjs"
     },
     "./next-config/export": {
-      "import": "./src/config/next.config.export.mjs"
+      "import": "./config/next.config.export.mjs"
     },
-    "./styles": "./dist/index.css",
-    "./styles.css": "./dist/index.css",
-    "./config.schema.json": "./src/lib/config.schema.json"
+    "./styles": "./dist/styles.css",
+    "./styles.css": "./dist/styles.css",
+    "./config.schema.json": "./config/specra.config.schema.json"
   },
   "files": [
     "dist",
-    "src",
-    "scripts",
+    "config",
     "README.md"
   ],
   "scripts": {
-    "build": "rm -rf dist && tsup",
+    "build": "rm -rf dist && npm run generate:schema && tsup",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
-    "postinstall": "node scripts/postinstall.js"
+    "generate:schema": "ts-json-schema-generator --path src/lib/config.types.ts --type SpecraConfig --out config/specra.config.schema.json"
   },
   "keywords": [
     "documentation",
@@ -137,6 +145,7 @@
     "next": "^16.1.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "ts-json-schema-generator": "^2.4.0",
     "tsup": "^8.3.5",
     "typescript": "^5"
   }

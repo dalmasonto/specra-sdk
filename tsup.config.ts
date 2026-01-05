@@ -4,7 +4,7 @@ export default defineConfig([
   // Client components (with "use client" directive)
   {
     entry: {
-      'components/index': 'src/components/index.ts',
+      'components/index': 'src/components/index.ts'
     },
     format: ['esm', 'cjs'],
     dts: true,
@@ -29,8 +29,7 @@ export default defineConfig([
   {
     entry: {
       index: 'src/index.ts',
-      'app/layout': 'src/app/layout.tsx',
-      'app/docs-page': 'src/app/docs-page.tsx',
+      styles: 'src/styles.ts',
       'app/api/mdx-watch/route': 'src/app/api/mdx-watch/route.ts',
       'lib/index': 'src/lib/index.ts',
       'middleware/security': 'src/middleware/security.ts',

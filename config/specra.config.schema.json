@@ -1,0 +1,592 @@
+{
+  "$ref": "#/definitions/SpecraConfig",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "AnalyticsConfig": {
+      "additionalProperties": false,
+      "description": "Analytics configuration",
+      "properties": {
+        "custom": {
+          "description": "Custom analytics scripts",
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "async": {
+                "type": "boolean"
+              },
+              "defer": {
+                "type": "boolean"
+              },
+              "src": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "src"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "googleAnalytics": {
+          "description": "Google Analytics tracking ID",
+          "type": "string"
+        },
+        "googleTagManager": {
+          "description": "Google Tag Manager ID",
+          "type": "string"
+        },
+        "plausible": {
+          "description": "Plausible Analytics domain",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "BannerConfig": {
+      "additionalProperties": false,
+      "description": "Site-wide banner configuration",
+      "properties": {
+        "dismissible": {
+          "description": "Whether the banner can be dismissed",
+          "type": "boolean"
+        },
+        "enabled": {
+          "description": "Whether the banner is enabled",
+          "type": "boolean"
+        },
+        "message": {
+          "description": "Banner message",
+          "type": "string"
+        },
+        "type": {
+          "description": "Banner type",
+          "enum": [
+            "info",
+            "warning",
+            "success",
+            "error"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "DeploymentConfig": {
+      "additionalProperties": false,
+      "description": "Deployment configuration for different hosting scenarios",
+      "properties": {
+        "basePath": {
+          "description": "Base path for assets when deploying to GitHub Pages without custom domain This should be your repository name (e.g., 'my-repo') Only used when target is 'github-pages' and no custom domain is configured",
+          "type": "string"
+        },
+        "customDomain": {
+          "description": "Whether a custom domain is configured When true, basePath will be ignored even for GitHub Pages",
+          "type": "boolean"
+        },
+        "target": {
+          "description": "Deployment target\n- 'vercel': For Vercel or similar Node.js hosting (uses 'standalone' output)\n- 'github-pages': For GitHub Pages static hosting (uses 'export' output)\n- 'static': For any static hosting like Netlify, Cloudflare Pages, etc.\n- 'custom-domain-static': For static hosting with custom domain (no basePath needed)",
+          "enum": [
+            "vercel",
+            "github-pages",
+            "static",
+            "custom-domain-static"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "EnvironmentVariables": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "not": {}
+          }
+        ],
+        "description": "Custom environment variables"
+      },
+      "description": "Environment variables that can be used in documentation These will be replaced at build time or runtime",
+      "properties": {
+        "API_BASE_URL": {
+          "description": "API base URL",
+          "type": "string"
+        },
+        "API_VERSION": {
+          "description": "API version",
+          "type": "string"
+        },
+        "CDN_URL": {
+          "description": "CDN URL",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "FeaturesConfig": {
+      "additionalProperties": false,
+      "description": "Documentation features",
+      "properties": {
+        "editUrl": {
+          "description": "Enable/disable edit this page links. Provide a URL template (e.g., \"https://github.com/user/repo/edit/main/docs\") or false to disable",
+          "type": [
+            "string",
+            "boolean"
+          ]
+        },
+        "i18n": {
+          "description": "Enable i18n (internationalization)",
+          "type": "boolean"
+        },
+        "showAuthors": {
+          "description": "Show author information",
+          "type": "boolean"
+        },
+        "showLastUpdated": {
+          "description": "Show last updated timestamp",
+          "type": "boolean"
+        },
+        "showReadingTime": {
+          "description": "Show reading time estimate",
+          "type": "boolean"
+        },
+        "showTags": {
+          "description": "Show tags",
+          "type": "boolean"
+        },
+        "versioning": {
+          "description": "Enable version dropdown",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "FooterBranding": {
+      "additionalProperties": false,
+      "description": "Footer branding configuration",
+      "properties": {
+        "logo": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "dark": {
+                  "type": "string"
+                },
+                "light": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "type": "object"
+            }
+          ],
+          "description": "Logo for the branding - can be a string or an object with light/dark variants"
+        },
+        "showBranding": {
+          "description": "Whether to show the branding",
+          "type": "boolean"
+        },
+        "title": {
+          "description": "Title text for the branding",
+          "type": "string"
+        },
+        "url": {
+          "description": "URL to link to when branding is clicked",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "FooterConfig": {
+      "additionalProperties": false,
+      "description": "Footer configuration",
+      "properties": {
+        "branding": {
+          "$ref": "#/definitions/FooterBranding",
+          "description": "Branding configuration for \"Powered by\" section"
+        },
+        "copyright": {
+          "description": "Copyright text",
+          "type": "string"
+        },
+        "customContent": {
+          "description": "Custom footer content",
+          "type": "string"
+        },
+        "links": {
+          "description": "Footer links organized by columns",
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "items": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "href": {
+                      "type": "string"
+                    },
+                    "label": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "label",
+                    "href"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "title",
+              "items"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "NavigationConfig": {
+      "additionalProperties": false,
+      "description": "Navigation and sidebar configuration",
+      "properties": {
+        "collapsibleSidebar": {
+          "description": "Whether the sidebar is collapsible",
+          "type": "boolean"
+        },
+        "showBreadcrumbs": {
+          "description": "Whether to show breadcrumbs",
+          "type": "boolean"
+        },
+        "showSidebar": {
+          "description": "Whether to show the sidebar by default",
+          "type": "boolean"
+        },
+        "showTableOfContents": {
+          "description": "Whether to show table of contents",
+          "type": "boolean"
+        },
+        "tabGroups": {
+          "description": "Tab groups for organizing documentation sections",
+          "items": {
+            "$ref": "#/definitions/TabGroup"
+          },
+          "type": "array"
+        },
+        "tocMaxDepth": {
+          "description": "Maximum depth for table of contents",
+          "type": "number"
+        },
+        "tocPosition": {
+          "description": "Position of table of contents",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "SearchConfig": {
+      "additionalProperties": false,
+      "description": "Search configuration",
+      "properties": {
+        "enabled": {
+          "description": "Enable/disable search functionality",
+          "type": "boolean"
+        },
+        "meilisearch": {
+          "additionalProperties": false,
+          "description": "Meilisearch configuration",
+          "properties": {
+            "apiKey": {
+              "description": "API key for Meilisearch",
+              "type": "string"
+            },
+            "host": {
+              "description": "Meilisearch server URL",
+              "type": "string"
+            },
+            "indexName": {
+              "description": "Index name",
+              "type": "string"
+            }
+          },
+          "required": [
+            "host",
+            "indexName"
+          ],
+          "type": "object"
+        },
+        "placeholder": {
+          "description": "Placeholder text for search input",
+          "type": "string"
+        },
+        "provider": {
+          "description": "Search provider type",
+          "enum": [
+            "meilisearch",
+            "algolia",
+            "local"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "SiteConfig": {
+      "additionalProperties": false,
+      "description": "Site metadata and branding",
+      "properties": {
+        "activeVersion": {
+          "description": "Active/default version for the documentation",
+          "type": "string"
+        },
+        "baseUrl": {
+          "description": "Base URL path for the documentation (e.g., '/docs')",
+          "type": "string"
+        },
+        "description": {
+          "description": "Short description of the documentation",
+          "type": "string"
+        },
+        "favicon": {
+          "description": "Path to the favicon",
+          "type": "string"
+        },
+        "hideLogo": {
+          "description": "Whether to hide the site logo in the header",
+          "type": "boolean"
+        },
+        "hideTitle": {
+          "description": "Whether to hide the site title in the header",
+          "type": "boolean"
+        },
+        "language": {
+          "description": "Default language for the documentation",
+          "type": "string"
+        },
+        "logo": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "dark": {
+                  "type": "string"
+                },
+                "light": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "type": "object"
+            }
+          ],
+          "description": "Path to the site logo - can be a string or an object with light/dark variants"
+        },
+        "organizationName": {
+          "description": "Organization or author name",
+          "type": "string"
+        },
+        "projectName": {
+          "description": "Project name",
+          "type": "string"
+        },
+        "title": {
+          "description": "The title of the documentation site",
+          "type": "string"
+        },
+        "url": {
+          "description": "URL where the documentation is hosted",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title"
+      ],
+      "type": "object"
+    },
+    "SocialLinks": {
+      "additionalProperties": false,
+      "description": "Social and external links",
+      "properties": {
+        "custom": {
+          "description": "Custom social links",
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "icon": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "label",
+              "url"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "discord": {
+          "description": "Discord invite URL",
+          "type": "string"
+        },
+        "github": {
+          "description": "GitHub repository URL",
+          "type": "string"
+        },
+        "linkedin": {
+          "description": "LinkedIn profile or company page",
+          "type": "string"
+        },
+        "twitter": {
+          "description": "Twitter/X handle or URL",
+          "type": "string"
+        },
+        "youtube": {
+          "description": "YouTube channel URL",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "SpecraConfig": {
+      "additionalProperties": false,
+      "description": "Main configuration interface",
+      "properties": {
+        "$schema": {
+          "description": "JSON Schema reference (for IDE support)",
+          "type": "string"
+        },
+        "analytics": {
+          "$ref": "#/definitions/AnalyticsConfig",
+          "description": "Analytics configuration"
+        },
+        "banner": {
+          "$ref": "#/definitions/BannerConfig",
+          "description": "Site-wide banner"
+        },
+        "deployment": {
+          "$ref": "#/definitions/DeploymentConfig",
+          "description": "Deployment configuration"
+        },
+        "env": {
+          "$ref": "#/definitions/EnvironmentVariables",
+          "description": "Environment variables for use in docs"
+        },
+        "features": {
+          "$ref": "#/definitions/FeaturesConfig",
+          "description": "Documentation features"
+        },
+        "footer": {
+          "$ref": "#/definitions/FooterConfig",
+          "description": "Footer configuration"
+        },
+        "navigation": {
+          "$ref": "#/definitions/NavigationConfig",
+          "description": "Navigation and sidebar configuration"
+        },
+        "search": {
+          "$ref": "#/definitions/SearchConfig",
+          "description": "Search configuration"
+        },
+        "site": {
+          "$ref": "#/definitions/SiteConfig",
+          "description": "Site metadata and branding"
+        },
+        "social": {
+          "$ref": "#/definitions/SocialLinks",
+          "description": "Social and external links"
+        },
+        "theme": {
+          "$ref": "#/definitions/ThemeConfig",
+          "description": "Theme and appearance settings"
+        }
+      },
+      "required": [
+        "site"
+      ],
+      "type": "object"
+    },
+    "TabGroup": {
+      "additionalProperties": false,
+      "description": "Tab group for organizing documentation",
+      "properties": {
+        "icon": {
+          "description": "Optional icon name (lucide-react icon)",
+          "type": "string"
+        },
+        "id": {
+          "description": "Unique identifier for the tab group",
+          "type": "string"
+        },
+        "label": {
+          "description": "Display label for the tab",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "type": "object"
+    },
+    "ThemeConfig": {
+      "additionalProperties": false,
+      "description": "Theme and appearance settings",
+      "properties": {
+        "customCss": {
+          "description": "Custom CSS file path",
+          "type": "string"
+        },
+        "defaultMode": {
+          "description": "Default theme mode",
+          "enum": [
+            "light",
+            "dark",
+            "system"
+          ],
+          "type": "string"
+        },
+        "primaryColor": {
+          "description": "Primary color for the theme",
+          "type": "string"
+        },
+        "respectPrefersColorScheme": {
+          "description": "Whether to respect system preferences",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

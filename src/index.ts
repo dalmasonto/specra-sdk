@@ -17,14 +17,6 @@ export * from './lib'
 // React components
 export * from './components'
 
-// Next.js app exports (for re-exporting in user projects)
-export { default as RootLayout, generateMetadata as generateRootMetadata } from './app/layout'
-export {
-  default as DocsPage,
-  generateMetadata as generateDocsMetadata,
-  generateStaticParams as generateDocsStaticParams
-} from './app/docs-page'
-
 // Types
 export type { SpecraConfig, SiteConfig, NavigationConfig, ThemeConfig } from './lib/config.types'
 export type { Doc, DocMeta, TocItem } from './lib/mdx'
