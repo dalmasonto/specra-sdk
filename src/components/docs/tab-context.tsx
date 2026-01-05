@@ -13,18 +13,28 @@ const TabContext = React.createContext<TabContextType | undefined>(undefined)
 const TAB_STORAGE_KEY = "specra-active-tab-group"
 
 export function TabProvider({ children, defaultTab }: { children: React.ReactNode; defaultTab: string }) {
-  // Initialize from localStorage if available, otherwise use defaultTab
-  const [activeTabGroup, setActiveTabGroupState] = React.useState(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const stored = localStorage.getItem(TAB_STORAGE_KEY)
-        return stored || defaultTab
-      } catch {
-        return defaultTab
+  // Always initialize with defaultTab to avoid hydration mismatch
+  const [activeTabGroup, setActiveTabGroupState] = React.useState(defaultTab)
+  const isInitialMount = React.useRef(true)
+
+  // Sync with localStorage after hydration
+  React.useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+
+      // Only read from localStorage on initial mount
+      if (typeof window !== "undefined") {
+        try {
+          const stored = localStorage.getItem(TAB_STORAGE_KEY)
+          if (stored && stored !== defaultTab) {
+            setActiveTabGroupState(stored)
+          }
+        } catch {
+          // Ignore localStorage errors
+        }
       }
     }
-    return defaultTab
-  })
+  }, [defaultTab])
 
   // Wrapper to persist to localStorage when tab changes
   const setActiveTabGroup = (tabId: string) => {
