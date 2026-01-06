@@ -22,6 +22,25 @@ export function CodeBlock({ code, language, filename }: CodeBlockProps) {
     const lines = code.split("\n")
 
     return lines.map((line, i) => {
+      // Detect diff markers
+      const isDeletion = line.startsWith("-")
+      const isAddition = line.startsWith("+")
+      const isDiff = isDeletion || isAddition
+
+      // Get the line background class based on diff type
+      const diffBgClass = isDeletion
+        ? "bg-red-500/5 dark:bg-red-500/10"
+        : isAddition
+        ? "bg-green-500/5 dark:bg-green-500/10"
+        : ""
+
+      // Get the diff marker color
+      const diffMarkerClass = isDeletion
+        ? "text-red-600 dark:text-red-400"
+        : isAddition
+        ? "text-green-600 dark:text-green-400"
+        : ""
+
       const tokens: Array<{ type: string; value: string }> = []
       let currentPos = 0
 
@@ -71,17 +90,30 @@ export function CodeBlock({ code, language, filename }: CodeBlockProps) {
       }
 
       return (
-        <div key={i} className="table-row">
+        <div key={i} className={`table-row ${diffBgClass}`}>
           <span className="table-cell pr-4 text-right select-none text-muted-foreground/40 w-8 align-top">{i + 1}</span>
           <span className="table-cell align-top">
             {tokens.length === 0 ? (
               <span>&nbsp;</span>
             ) : (
-              tokens.map((token, j) => (
-                <span key={j} className={`token-${token.type}`}>
-                  {token.value}
-                </span>
-              ))
+              tokens.map((token, j) => {
+                // Special handling for diff markers (first character)
+                if (j === 0 && isDiff && token.value.length > 0 && (token.value[0] === '+' || token.value[0] === '-')) {
+                  const marker = token.value[0]
+                  const rest = token.value.slice(1)
+                  return (
+                    <span key={j}>
+                      <span className={`${diffMarkerClass} font-bold`}>{marker}</span>
+                      {rest && <span className={`token-${token.type}`}>{rest}</span>}
+                    </span>
+                  )
+                }
+                return (
+                  <span key={j} className={`token-${token.type}`}>
+                    {token.value}
+                  </span>
+                )
+              })
             )}
           </span>
         </div>
