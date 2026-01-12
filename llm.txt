@@ -1,0 +1,103 @@
+# Specra SDK - AI-Friendly Documentation
+
+## Project Overview
+Specra is a modern documentation library/framework for Next.js that enables developers to create beautiful, feature-rich documentation sites with minimal configuration.
+
+## Key Information
+- Package Name: specra
+- Version: 0.1.7
+- Type: Next.js Library/SDK
+- License: MIT
+- Repository: https://github.com/dalmasonto/specra
+- Documentation: https://specra.vercel.app
+
+## Core Features
+- MDX-powered documentation with React component support
+- Multi-version documentation management
+- API reference generation (OpenAPI, Postman, Specra formats)
+- Full-text search integration (MeiliSearch)
+- Tab groups for content organization
+- Dark mode with system preference detection
+- Tailwind CSS customization
+- Hot reload during development
+- Responsive mobile-friendly design
+
+## Technology Stack
+- Next.js (14.x, 15.x, 16.x)
+- React (18.x, 19.x)
+- TypeScript
+- Tailwind CSS 4.x
+- MDX (next-mdx-remote)
+- Radix UI components
+- MeiliSearch
+- Zod for validation
+
+## Architecture
+The SDK exports multiple entry points:
+- Core: Main entry, components, layouts, MDX components
+- App Routes: Pre-built layout and docs page components
+- API Routes: MDX watch endpoint
+- Configuration: Next.js config helpers
+- Middleware: Security middleware
+- Styles: Pre-built CSS
+
+## Key Directories
+- src/app/ - Next.js app route handlers
+- src/components/ - Reusable React components
+- src/layouts/ - Documentation layouts
+- src/lib/ - Core utilities and types
+- src/middleware/ - Next.js middleware
+- config/ - Next.js configuration presets
+
+## Usage Pattern
+1. Install: npm install specra
+2. Configure: Create specra.config.json
+3. Re-export: Use specra/app/layout and specra/app/docs-page
+4. Write: Create MDX files in docs/ directory
+5. Customize: Import specra/styles and override
+
+## Configuration
+Primary config file: specra.config.json
+- Site metadata (title, description, logo, URL)
+- Theme settings (colors, modes)
+- Navigation structure
+- Version management
+- API documentation sources
+- Search integration
+
+## Relationship to Other Projects
+- **specra-cli (create-specra)**: CLI tool that scaffolds new projects using this SDK
+- **specra-docs**: Reference implementation and documentation site built with this SDK
+
+## Installation
+npm install specra
+yarn add specra
+pnpm add specra
+
+## Peer Dependencies
+Requires: Next.js, React, and React DOM
+
+## Build Output
+- dist/ - Compiled JavaScript (CJS and ESM)
+- dist/*.d.ts - TypeScript type definitions
+- dist/styles.css - Bundled styles
+- config/ - Next.js configuration files
+
+## Development
+- Build: npm run build
+- Watch: npm run dev
+- Type Check: npm run typecheck
+- Schema Generation: npm run generate:schema
+
+## Entry Points
+See package.json exports for all available import paths including:
+- specra
+- specra/app/layout
+- specra/app/docs-page
+- specra/components
+- specra/layouts
+- specra/lib
+- specra/styles
+
+## Authors
+dalmasonto, arthur-kamau
