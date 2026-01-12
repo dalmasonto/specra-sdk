@@ -1,6 +1,6 @@
 {
   "name": "specra",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "A modern documentation library for Next.js with built-in versioning, API reference generation, full-text search, and MDX support",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

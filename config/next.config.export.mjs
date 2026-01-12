@@ -19,13 +19,17 @@ try {
 // Load deployment config from specra.config.json
 let basePath = ""
 try {
-  const configPath = path.join(__dirname, "specra.config.json")
+  // Use process.cwd() to get the project root where the command is executed
+  const projectRoot = process.cwd()
+  console.log(`\n🔍 Loading deployment config from: ${projectRoot}/specra.config.json`)
+  const configPath = path.join(projectRoot, "specra.config.json")
   if (fs.existsSync(configPath)) {
     const config = JSON.parse(fs.readFileSync(configPath, "utf8"))
+    console.log("✅ Loaded specra.config.json", config)
     const deployment = config.deployment || {}
 
-    // Only apply basePath for GitHub Pages without custom domain
-    if (deployment.target === "github-pages" && !deployment.customDomain && deployment.basePath) {
+    // Apply basePath for static or github-pages without custom domain
+    if ((deployment.target === "github-pages" || deployment.target === "static") && !deployment.customDomain && deployment.basePath) {
       basePath = deployment.basePath.startsWith("/")
         ? deployment.basePath
         : `/${deployment.basePath}`
