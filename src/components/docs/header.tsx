@@ -4,6 +4,7 @@ import Link from "next/link"
 import { Search, Menu, Github, Twitter, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { VersionSwitcher } from "./version-switcher"
+import { LanguageSwitcher } from "./language-switcher"
 import { ThemeToggle } from "./theme-toggle"
 import { SearchModal } from "./search-modal"
 import { Logo } from "./logo"
@@ -120,6 +121,7 @@ export function Header({ currentVersion, versions, onMenuClick, config: configPr
           )}
 
           <ThemeToggle />
+          <LanguageSwitcher />
         </div>
       </div>
 

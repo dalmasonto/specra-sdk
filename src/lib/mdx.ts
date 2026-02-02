@@ -321,7 +321,7 @@ export async function getAllDocs(version = "v1.0.0", locale?: string): Promise<D
         // No, current logic returns flat array.
 
         // Let's try to load the doc.
-        const doc = await getDocBySlug(isLocalized ? `${originalFilePath}.${fileLocale}` : originalFilePath, version, isLocalized ? fileLocale : undefined)
+        const doc = await getDocBySlug(originalFilePath, version, isLocalized ? fileLocale : undefined)
 
         if (!doc) return null
 
